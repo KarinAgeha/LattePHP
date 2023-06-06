@@ -11,6 +11,8 @@ class Latte
     private array $instances = [];
     // singleton
     private array $singleton = [];
+    //alias
+    private array $aliases = [];
 
     // If true, name resolution is attempted even if the class is not registered in the DI container.
     private bool $isStrictResolveMode = true;
@@ -19,6 +21,33 @@ class Latte
     public static function Start()
     {
         return new static;
+    }
+
+    public function getAliases()
+    {
+        return $this->aliases;
+    }
+
+    public function getInstances()
+    {
+        return $this->instances;
+    }
+
+    public function aliasLoad()
+    {
+        LatteAliasSupport::aliasIgniter($this);
+    }
+
+    public function aliasAtOnce(array $aliases)
+    {
+        foreach($aliases as $name => $reality) {
+            $this->alias($name, $reality);
+        }
+    }
+
+    public function alias(string $name, string | object $reality)
+    {
+        $this->aliases[$name] = $reality;
     }
 
     // Set strict dependency resolution mode
